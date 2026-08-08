@@ -35,10 +35,12 @@ def create_app(config_name=None):
     frontend_env = os.environ.get('FRONTEND_URL', '')
     if frontend_env and frontend_env.strip() != '*':
         allowed_origins = [url.strip() for url in frontend_env.split(',') if url.strip()]
+        if 'https://annapoorniacademy.netlify.app' not in allowed_origins:
+            allowed_origins.append('https://annapoorniacademy.netlify.app')
         if 'http://localhost:5173' not in allowed_origins and config_name != 'production':
             allowed_origins.append('http://localhost:5173')
     else:
-        allowed_origins = '*'
+        allowed_origins = ['https://annapoorniacademy.netlify.app', 'http://localhost:5173', '*']
 
     # Initialize extensions
     db.init_app(app)

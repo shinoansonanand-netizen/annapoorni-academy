@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://annapoorni-academy-production.up.railway.app';
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '', // Uses VITE_API_BASE_URL in production, or relative Vite proxy in local dev
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   }
