@@ -1,73 +1,77 @@
-# Annapoorni Academy V1.0 — Deployment & Operations Guide
+# Annapoorni Academy V1.0 — Production Deployment Guide
 
-## 1. Quick Start with Docker Compose (Recommended for Production)
+This guide details how to deploy the **React/Vite Frontend on Netlify** and the **Flask/PyMySQL Backend on a cloud provider (Render, Railway, AWS, Docker Compose, or VPS)**.
 
-Ensure Docker and Docker Compose are installed on your server.
+---
+
+## 1. Environment Variable Reference
+
+### Backend Production Environment Variables
+
+| Variable Name | Required / Optional | Default (Local Dev) | Description |
+| :--- | :--- | :--- | :--- |
+| `FLASK_ENV` | Required | `development` | Set to `production` for live deployments. |
+| `PORT` | Optional | `5000` | Port provided by hosting provider (e.g. Render/Railway). |
+| `SECRET_KEY` | Required | Default fallback | Flask session secret key. Generate a random secret string. |
+| `JWT_SECRET_KEY` | Required | Default fallback | JWT signature key for Admin authentication tokens. |
+| `JWT_ACCESS_TOKEN_EXPIRES_DAYS` | Optional | `7` | Number of days until JWT admin token expires. |
+| `DATABASE_URL` | Required for MySQL | `sqlite:///annapoorni.db` | Production MySQL connection string (PyMySQL driver format: `mysql+pymysql://user:pass@host:3306/dbname`). Automatically converts `mysql://` to `mysql+pymysql://`. |
+| `FRONTEND_URL` | Required | `http://localhost:5173` | Deployed Netlify frontend URL (e.g. `https://your-site-name.netlify.app`). Used for strict CORS origin permission. |
+| `UPLOAD_FOLDER` | Optional | `uploads` | Path to file uploads directory (e.g. `/tmp/uploads` or persistent storage mount). |
+| `MAX_CONTENT_LENGTH` | Optional | `10485760` (10MB) | Maximum file upload size limit in bytes. |
+| `ADMIN_USERNAME` | Optional | `admin` | Username for initial admin account seeding. |
+| `ADMIN_EMAIL` | Optional | `shinoanson84@gmail.com` | Email for initial admin account seeding. |
+| `ADMIN_PASSWORD` | Optional | `$12345678` | Password for initial admin account seeding. |
+| `MAIL_SERVER` | Optional | `smtp.gmail.com` | SMTP server host for email dispatch. |
+| `MAIL_PORT` | Optional | `587` | SMTP server port. |
+| `MAIL_USERNAME` | Optional | `""` | SMTP sender email username. |
+| `MAIL_PASSWORD` | Optional | `""` | SMTP sender app password. |
+
+---
+
+### Netlify Frontend Environment Variables
+
+| Variable Name | Required / Optional | Description |
+| :--- | :--- | :--- |
+| `VITE_API_BASE_URL` | Required on Netlify | The live URL of your deployed Flask backend API (e.g. `https://annapoorni-api.onrender.com`). |
+
+---
+
+## 2. Production Start & Entrypoint Commands
+
+- **WSGI Production Server Command (Gunicorn)**:
+  ```bash
+  gunicorn --bind 0.0.0.0:$PORT app:app
+  ```
+- **Direct Flask Command (Development/Container Standalone)**:
+  ```bash
+  python app.py
+  ```
+
+---
+
+## 3. Database Initialization & Seeding
+
+The application automatically creates all required database tables (`db.create_all()`) and seeds default content & admin credentials (`seed_database()`) on initial backend startup.
+
+If you prefer to initialize MySQL tables manually using SQL files:
+```bash
+mysql -u <db_user> -p <db_name> < database/schema.sql
+mysql -u <db_user> -p <db_name> < database/seed.sql
+```
+
+---
+
+## 4. Docker Compose Setup (Local or Self-Hosted Production)
 
 ```bash
-# 1. Clone repository and navigate to project root
+# 1. Clone repository
+git clone https://github.com/shinoansonanand-netizen/annapoorni-academy.git
 cd annapoorni-academy
 
-# 2. Copy environment variable file
+# 2. Copy environment template
 cp .env.example .env
 
-# 3. Launch full-stack services (Frontend Nginx, Flask Backend, MySQL 8.0)
+# 3. Build & start full container stack
 docker-compose up -d --build
-
-# 4. Access Platform
-# Public Website: http://localhost:80
-# Admin Panel:    http://localhost:80/admin/login
-# REST API:       http://localhost:5000/api
 ```
-
----
-
-## 2. Manual Development Setup
-
-### Backend Setup (Python Flask)
-```bash
-cd backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run Flask backend server
-python app.py
-# Server runs at http://localhost:5000
-```
-
-### Database Initialization
-The Flask application automatically initializes SQLite/MySQL database tables and populates default admin credentials (`admin` / `admin123`) and seed content on startup.
-
-Alternatively, execute `database/schema.sql` and `database/seed.sql` directly on your MySQL instance:
-```bash
-mysql -u root -p annapoorni_db < database/schema.sql
-mysql -u root -p annapoorni_db < database/seed.sql
-```
-
-### Frontend Setup (React + Vite)
-```bash
-cd frontend
-
-# Install Node packages
-npm install
-
-# Start Vite development server
-npm run dev
-# App runs at http://localhost:5173
-```
-
----
-
-## 3. Production Build
-
-To create the optimized static production bundle for the frontend:
-```bash
-cd frontend
-npm run build
-```
-The output files will be in `frontend/dist/` ready to be served via Nginx or Apache.

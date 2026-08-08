@@ -31,9 +31,21 @@ def create_app(config_name=None):
     app = Flask(__name__)
     app.config.from_object(config_by_name.get(config_name, config_by_name['default']))
 
+    # Configure CORS origins based on FRONTEND_URL environment variable
+    frontend_env = os.environ.get('FRONTEND_URL', '')
+    if frontend_env and frontend_env.strip() != '*':
+        allowed_origins = [url.strip() for url in frontend_env.split(',') if url.strip()]
+        if 'http://localhost:5173' not in allowed_origins and config_name != 'production':
+            allowed_origins.append('http://localhost:5173')
+    else:
+        allowed_origins = '*'
+
     # Initialize extensions
     db.init_app(app)
-    cors.init_app(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+    cors.init_app(app, resources={
+        r"/api/*": {"origins": allowed_origins},
+        r"/uploads/*": {"origins": allowed_origins}
+    }, supports_credentials=True)
     jwt.init_app(app)
 
     # Register error handlers
@@ -82,4 +94,5 @@ app = create_app()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    is_debug = os.environ.get('FLASK_ENV', 'development') == 'development'
+    app.run(host='0.0.0.0', port=port, debug=is_debug)

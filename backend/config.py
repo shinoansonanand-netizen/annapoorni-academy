@@ -12,13 +12,16 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES_DAYS', 7)))
 
     # Fallback to local SQLite database if DATABASE_URL is not set or empty
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        f"sqlite:///{os.path.join(os.path.dirname(__file__), 'annapoorni.db')}"
+    # Automatically convert mysql:// to mysql+pymysql:// for PyMySQL driver compatibility
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url and db_url.startswith('mysql://'):
+        db_url = db_url.replace('mysql://', 'mysql+pymysql://', 1)
 
+    SQLALCHEMY_DATABASE_URI = db_url or f"sqlite:///{os.path.join(os.path.dirname(__file__), 'annapoorni.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Upload configurations
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or os.path.join(os.path.dirname(__file__), 'uploads')
     MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 10 * 1024 * 1024)) # 10MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'}
 

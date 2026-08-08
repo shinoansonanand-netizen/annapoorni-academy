@@ -19,11 +19,16 @@ def seed_database():
     
     # 1. Admin Account
     if not Admin.query.first():
+        import os
+        admin_username = os.environ.get('ADMIN_USERNAME', 'admin')
+        admin_email = os.environ.get('ADMIN_EMAIL', 'shinoanson84@gmail.com')
+        admin_password = os.environ.get('ADMIN_PASSWORD', '$12345678')
+
         admin = Admin(
-            username='admin',
-            email='shinoanson84@gmail.com'
+            username=admin_username,
+            email=admin_email
         )
-        admin.set_password('$12345678')
+        admin.set_password(admin_password)
         db.session.add(admin)
 
     # 2. Website Settings
