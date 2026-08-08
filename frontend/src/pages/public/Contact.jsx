@@ -109,9 +109,9 @@ export const Contact = () => {
 
             {/* Official Social Links */}
             {contactSocials.length > 0 && (
-              <div>
+              <div style={{ marginBottom: '2rem' }}>
                 <h4 style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>Connect on Official Channels</h4>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                   {contactSocials.map(soc => (
                     <a
                       key={soc.id}
@@ -126,6 +126,40 @@ export const Contact = () => {
                 </div>
               </div>
             )}
+
+            {/* Google Maps Location Section */}
+            <div className="glass-card" style={{ padding: '1.5rem', borderRadius: '16px', background: '#FFFFFF' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1rem' }}>
+                <MapPin size={22} style={{ color: 'var(--primary-color)' }} />
+                <div>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>Campus & Offline Class Location</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--gray-500)', margin: 0 }}>Coach Sindhu Ram Official Academy</p>
+                </div>
+              </div>
+
+              <div style={{ borderRadius: '12px', overflow: 'hidden', height: '220px', background: 'var(--gray-100)', marginBottom: '1rem' }}>
+                <iframe
+                  title="Coach Sindhu Ram Academy Google Maps"
+                  src="https://maps.google.com/maps?q=Annapoorni%20Academy%20Coach%20Sindhu%20Ram&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+
+              <a
+                href="https://share.google/JbZEN9U25VAN6mQU1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+                style={{ width: '100%', textAlign: 'center', justifyContent: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 700 }}
+              >
+                📍 Open Location in Google Maps
+              </a>
+            </div>
           </div>
 
           {/* Contact Form Box */}
@@ -135,7 +169,7 @@ export const Contact = () => {
                 <CheckCircle2 size={56} style={{ color: 'var(--success-color)', margin: '0 auto 1rem' }} />
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Inquiry Received!</h3>
                 <p style={{ color: 'var(--gray-600)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                  Thank you <strong>{formData.name}</strong>! Your inquiry has been sent to Coach Sindhu Ram's team (`shinoansonanand@gmail.com`) and recorded in the admin portal.
+                  Thank you <strong>{formData.name}</strong>! Your inquiry has been sent to Coach Sindhu Ram's team (`shinoanson84@gmail.com`) and recorded in the admin portal.
                 </p>
                 <a
                   href={`https://wa.me/918122795064?text=${encodeURIComponent(`Hi Coach Sindhu Ram, I just sent an inquiry: ${formData.subject}. My name is ${formData.name}.`)}`}

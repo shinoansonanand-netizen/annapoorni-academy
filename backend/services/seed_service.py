@@ -21,9 +21,9 @@ def seed_database():
     if not Admin.query.first():
         admin = Admin(
             username='admin',
-            email='shinoansonanand@gmail.com'
+            email='shinoanson84@gmail.com'
         )
-        admin.set_password('admin123')
+        admin.set_password('$12345678')
         db.session.add(admin)
 
     # 2. Website Settings
@@ -202,12 +202,12 @@ def seed_database():
     # 7. Contact Settings
     if not ContactSetting.query.first():
         contact = ContactSetting(
-            email='shinoansonanand@gmail.com',
+            email='shinoanson84@gmail.com',
             phone='+91 8122795064',
-            address='123 Education Lane, Knowledge Park, Academic City - 600001, India',
-            maps_embed_url='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.858713295982!2d80.2376!3d13.0604!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDAzJzM3LjQiTiA4MMKwMTQnMTUuNCJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin',
+            address='Coach Sindhu Ram Academy, Tamil Nadu, India',
+            maps_embed_url='https://maps.google.com/maps?q=Annapoorni%20Academy%20Coach%20Sindhu%20Ram&t=&z=15&ie=UTF8&iwloc=&output=embed',
             working_hours='Monday - Saturday: 8:30 AM - 6:30 PM',
-            contact_form_recipient='shinoansonanand@gmail.com'
+            contact_form_recipient='shinoanson84@gmail.com'
         )
         db.session.add(contact)
 

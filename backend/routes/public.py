@@ -16,7 +16,7 @@ from models.announcement import Announcement
 from models.enrollment import Enrollment
 from models.inquiry import ContactInquiry
 from models.activity_log import ActivityLog
-from services.email_service import send_admin_email_notification
+from services.email_service import send_admin_email_notification, send_student_confirmation_email
 
 public_bp = Blueprint('public', __name__, url_prefix='/api')
 
@@ -260,6 +260,31 @@ def enroll_course(course_id):
     """
     send_admin_email_notification(f"New Enrollment: {student_name} - {course.title}", email_html)
 
+    # Send Student Confirmation Email Copy
+    student_email_html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+      <h2 style="color: #1e3a8a; margin-top: 0;">🎓 Registration Confirmation — Annapoorni Academy</h2>
+      <p>Dear <strong>{student_name}</strong>,</p>
+      <p>Thank you for registering your enrollment inquiry for <strong>{course.title}</strong> with Coach Sindhu Ram.</p>
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <h4 style="margin-top: 0; color: #0f172a;">Your Registration Summary:</h4>
+        <p><strong>Course:</strong> {course.title}</p>
+        <p><strong>Preferred Batch Mode:</strong> {preferred_mode}</p>
+        <p><strong>Contact Phone / WhatsApp:</strong> {phone}</p>
+        <p><strong>Notes:</strong> {message or 'None'}</p>
+      </div>
+      <p>Our team will get in touch with you shortly with batch schedules and onboarding instructions.</p>
+      <p style="margin-top: 25px;">
+        <a href="https://wa.me/918122795064" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+          💬 Chat Directly on WhatsApp (+91 8122795064)
+        </a>
+      </p>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 25px 0;" />
+      <p style="font-size: 0.85rem; color: #64748b;">Warm regards,<br /><strong>Coach Sindhu Ram</strong><br />Annapoorni Academy</p>
+    </div>
+    """
+    send_student_confirmation_email(email, student_name, f"Registration Confirmation: {course.title}", student_email_html)
+
     return jsonify({
         'message': f"Enrollment registration for '{course.title}' submitted successfully!",
         'enrollment': enrollment.to_dict()
@@ -310,6 +335,30 @@ def submit_contact_inquiry():
     <blockquote style="background:#f1f5f9; padding:12px; border-left:4px solid #1e3a8a;">{message}</blockquote>
     """
     send_admin_email_notification(f"New Contact Inquiry from {name}: {subject}", inquiry_email_html)
+
+    # Send Student Confirmation Copy
+    student_inquiry_html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+      <h2 style="color: #1e3a8a; margin-top: 0;">📬 We Received Your Inquiry — Annapoorni Academy</h2>
+      <p>Dear <strong>{name}</strong>,</p>
+      <p>Thank you for reaching out to Coach Sindhu Ram at Annapoorni Academy. We have received your inquiry.</p>
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <h4 style="margin-top: 0; color: #0f172a;">Copy of Your Submitted Inquiry:</h4>
+        <p><strong>Subject:</strong> {subject}</p>
+        <p><strong>Preferred Mode:</strong> {mode}</p>
+        <p><strong>Message:</strong> {message}</p>
+      </div>
+      <p>Our team will respond to you shortly via email or phone.</p>
+      <p style="margin-top: 25px;">
+        <a href="https://wa.me/918122795064" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+          💬 Connect on WhatsApp (+91 8122795064)
+        </a>
+      </p>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 25px 0;" />
+      <p style="font-size: 0.85rem; color: #64748b;">Warm regards,<br /><strong>Coach Sindhu Ram</strong><br />Annapoorni Academy</p>
+    </div>
+    """
+    send_student_confirmation_email(email, name, f"Inquiry Received: {subject}", student_inquiry_html)
 
     return jsonify({
         'message': 'Your inquiry has been received. Our team will contact you shortly.',

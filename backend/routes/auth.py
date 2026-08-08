@@ -7,8 +7,8 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/admin')
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json() or {}
-    username_or_email = data.get('username') or data.get('email')
+    data = request.get_json(force=True, silent=True) or request.form or {}
+    username_or_email = data.get('username') or data.get('email') or data.get('username_or_email')
     password = data.get('password')
 
     if not username_or_email or not password:
@@ -21,7 +21,7 @@ def login():
     if not admin or not admin.check_password(password):
         return jsonify({'error': 'Invalid credentials'}), 401
 
-    token = create_access_token(identity=admin.id)
+    token = create_access_token(identity=str(admin.id))
     return jsonify({
         'message': 'Login successful',
         'token': token,

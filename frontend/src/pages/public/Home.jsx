@@ -33,13 +33,105 @@ export const Home = () => {
 
   const getSection = (key) => sections.find(s => s.section_key === key && s.is_enabled);
 
-  const hero = getSection('hero');
-  const about = getSection('about');
-  const featured = getSection('featured_courses');
-  const benefits = getSection('benefits');
-  const testimonials = getSection('testimonials');
-  const announcementsSec = getSection('announcements');
-  const cta = getSection('cta');
+  const hero = getSection('hero') || {
+    title: 'Master Vedic Maths, Memory & Speed Reading',
+    subtitle: 'Unlock faster mental calculations, advanced memory recall, national competition practice, and rapid reading efficiency with Coach Sindhu Ram.',
+    image_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000&auto=format&fit=crop&q=80',
+    cta_text: 'Explore Courses',
+    cta_url: '/courses',
+    secondary_cta_text: 'Browse Subjects',
+    secondary_cta_url: '/subjects',
+    background_style: 'gradient'
+  };
+
+  const about = getSection('about') || {
+    title: 'Empowering Minds with Coach Sindhu Ram',
+    subtitle: 'Specialized Coaching in Vedic Mathematics, Memory Training, and Speed Reading.',
+    content: 'Annapoorni Academy offers world-class training in Vedic Maths (16 Sutras for rapid mental arithmetic), Memory Coaching (association & recall techniques), and Speed Reading (rapid information processing). Our students excel in national-level speed competitions and academic challenges.',
+    image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
+    cta_text: 'Learn More About Us',
+    cta_url: '/about',
+    meta: [
+      { label: 'Active Students', value: '15,000+' },
+      { label: 'Expert Courses', value: '120+' },
+      { label: 'Interactive Lessons', value: '850+' },
+      { label: 'Success Rate', value: '98%' }
+    ]
+  };
+
+  const featured = getSection('featured_courses') || {
+    title: 'Flagship Coaching Programs',
+    subtitle: 'Master mental arithmetic sutras, retention strategies, and rapid reading with Coach Sindhu Ram.'
+  };
+
+  const displayCourses = featuredCourses.length > 0 ? featuredCourses : [
+    {
+      id: 1,
+      title: 'Vedic Maths & Speed Calculation Mastery',
+      description: 'Learn 16 Vedic Sutras for lightning-fast mental arithmetic, rapid multiplication, and competition prep.',
+      category: 'Vedic Maths',
+      difficulty: 'All Levels',
+      thumbnail_url: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 2,
+      title: 'Memory Coaching & Retention Masterclass',
+      description: 'Master cognitive recall techniques, mnemonic systems, mind mapping, and long-term memory strategy.',
+      category: 'Memory Coaching',
+      difficulty: 'All Levels',
+      thumbnail_url: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=600&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 3,
+      title: 'Speed Reading & Rapid Information Processing',
+      description: 'Double your reading speed, eliminate sub-vocalization, expand peripheral vision, and retain more text.',
+      category: 'Speed Reading',
+      difficulty: 'All Levels',
+      thumbnail_url: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80'
+    }
+  ];
+
+  const benefits = getSection('benefits') || {
+    title: 'Why Choose Annapoorni Academy',
+    subtitle: 'Everything you need to excel in mental mathematics, competition practice, and rapid information processing.',
+    meta: [
+      { title: 'Direct Coaching', desc: 'Personal guidance by Coach Sindhu Ram in Zoom & In-Person offline batches.' },
+      { title: '16 Vedic Sutras', desc: 'Master rapid mental calculation shortcuts for competitive exam success.' },
+      { title: 'Memory Techniques', desc: 'Proven mnemonic strategies for 100% exam recall and retention.' },
+      { title: 'Speed Reading', desc: 'Expand eye span and double reading speed with high comprehension.' }
+    ]
+  };
+
+  const testimonials = getSection('testimonials') || {
+    title: 'Student & Parent Testimonials',
+    subtitle: 'Hear from students who achieved national-level competition ranks and academic success.',
+    meta: [
+      {
+        quote: 'Coach Sindhu Ram’s Vedic Maths techniques helped me calculate complex math problems in seconds during my national competition!',
+        name: 'Kavitha R.',
+        role: 'National Competition Rank Holder',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
+      },
+      {
+        quote: 'The memory coaching session completely transformed my daughter’s exam prep. She retains formulas effortlessly.',
+        name: 'Suresh Kumar',
+        role: 'Parent of Student',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80'
+      }
+    ]
+  };
+
+  const announcementsSec = getSection('announcements') || {
+    title: 'Academy Notices & Updates',
+    subtitle: 'Latest news on upcoming Zoom batches, offline workshops, and speed math competitions.'
+  };
+
+  const cta = getSection('cta') || {
+    title: 'Ready to Boost Your Mental Calculation & Memory Skills?',
+    subtitle: 'Join Coach Sindhu Ram’s live Zoom and offline coaching batches today.',
+    cta_text: 'Enroll Now & Get Details',
+    cta_url: '/courses'
+  };
 
   const getBenefitIcon = (title) => {
     const t = (title || '').toLowerCase();
@@ -50,10 +142,6 @@ export const Home = () => {
     if (t.includes('pace')) return <Clock size={24} />;
     return <TrendingUp size={24} />;
   };
-
-  if (loading) {
-    return <div className="container" style={{ padding: '4rem 0', textAlign: 'center' }}>Loading Annapoorni Academy...</div>;
-  }
 
   return (
     <div>
@@ -160,7 +248,7 @@ export const Home = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-              {featuredCourses.slice(0, 3).map((c) => (
+              {displayCourses.slice(0, 3).map((c) => (
                 <CourseCard key={c.id} course={c} />
               ))}
             </div>

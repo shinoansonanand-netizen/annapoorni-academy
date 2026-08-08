@@ -11,7 +11,7 @@ def admin_required():
             try:
                 verify_jwt_in_request()
                 identity = get_jwt_identity()
-                admin = Admin.query.get(identity)
+                admin = Admin.query.get(int(identity))
                 if not admin:
                     return jsonify({'error': 'Unauthorized admin access'}), 403
             except Exception as e:
