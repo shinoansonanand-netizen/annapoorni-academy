@@ -252,8 +252,8 @@ export const Contact = () => {
                   />
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: '1rem' }}>
-                  <Send size={18} /> Send Message
+                <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
+                  {loading ? 'Sending Message...' : <><Send size={18} /> Send Message</>}
                 </button>
               </form>
             )}

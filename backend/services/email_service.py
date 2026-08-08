@@ -4,16 +4,33 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 
+def _parse_smtp_config():
+    """Extract and validate SMTP settings from environment variables."""
+    raw_server = os.environ.get('MAIL_SERVER', 'smtp.gmail.com').strip()
+    if '@' in raw_server:
+        smtp_server = 'smtp.gmail.com'
+    elif ':' in raw_server:
+        smtp_server = raw_server.split(':')[0]
+    else:
+        smtp_server = raw_server or 'smtp.gmail.com'
+
+    try:
+        smtp_port = int(os.environ.get('MAIL_PORT', 587))
+    except (ValueError, TypeError):
+        smtp_port = 587
+
+    smtp_user = os.environ.get('MAIL_USERNAME', '').strip()
+    smtp_pass = os.environ.get('MAIL_PASSWORD', '').strip()
+
+    return smtp_server, smtp_port, smtp_user, smtp_pass
+
 def send_admin_email_notification(subject, body_html, recipient=None):
     """
     Sends email notification to admin recipient (shinoanson84@gmail.com).
     Uses SMTP credentials from environment variables if set, otherwise logs email payload cleanly.
     """
     admin_recipient = recipient or os.environ.get('ADMIN_EMAIL', 'shinoanson84@gmail.com')
-    smtp_server = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-    smtp_port = int(os.environ.get('MAIL_PORT', 587))
-    smtp_user = os.environ.get('MAIL_USERNAME', '')
-    smtp_pass = os.environ.get('MAIL_PASSWORD', '')
+    smtp_server, smtp_port, smtp_user, smtp_pass = _parse_smtp_config()
 
     print(f"\n=======================================================")
     print(f"[EMAIL NOTIFICATION TRIGGERED] -> {admin_recipient}")
@@ -32,7 +49,7 @@ def send_admin_email_notification(subject, body_html, recipient=None):
             html_part = MIMEText(body_html, 'html')
             msg.attach(html_part)
 
-            server = smtplib.SMTP(smtp_server, smtp_port)
+            server = smtplib.SMTP(smtp_server, smtp_port, timeout=10)
             server.starttls()
             server.login(smtp_user, smtp_pass)
             server.sendmail(smtp_user, admin_recipient, msg.as_string())
@@ -50,10 +67,7 @@ def send_student_confirmation_email(recipient_email, student_name, subject, body
     """
     Sends a confirmation copy of the inquiry/enrollment response directly to the student/user's email address.
     """
-    smtp_server = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-    smtp_port = int(os.environ.get('MAIL_PORT', 587))
-    smtp_user = os.environ.get('MAIL_USERNAME', '')
-    smtp_pass = os.environ.get('MAIL_PASSWORD', '')
+    smtp_server, smtp_port, smtp_user, smtp_pass = _parse_smtp_config()
 
     print(f"\n=======================================================")
     print(f"[STUDENT COPY EMAIL TRIGGERED] -> {recipient_email} ({student_name})")
@@ -71,7 +85,7 @@ def send_student_confirmation_email(recipient_email, student_name, subject, body
             html_part = MIMEText(body_html, 'html')
             msg.attach(html_part)
 
-            server = smtplib.SMTP(smtp_server, smtp_port)
+            server = smtplib.SMTP(smtp_server, smtp_port, timeout=10)
             server.starttls()
             server.login(smtp_user, smtp_pass)
             server.sendmail(smtp_user, recipient_email, msg.as_string())
