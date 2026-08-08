@@ -1,0 +1,47 @@
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime
+
+def send_admin_email_notification(subject, body_html, recipient=None):
+    """
+    Sends email notification to admin recipient (shinoansonanand@gmail.com).
+    Uses SMTP credentials from environment variables if set, otherwise logs email payload cleanly.
+    """
+    admin_recipient = recipient or os.environ.get('ADMIN_EMAIL', 'shinoansonanand@gmail.com')
+    smtp_server = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    smtp_port = int(os.environ.get('MAIL_PORT', 587))
+    smtp_user = os.environ.get('MAIL_USERNAME', '')
+    smtp_pass = os.environ.get('MAIL_PASSWORD', '')
+
+    print(f"\n=======================================================")
+    print(f"[EMAIL NOTIFICATION TRIGGERED] -> {admin_recipient}")
+    print(f"Subject: {subject}")
+    print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"=======================================================\n")
+
+    # If SMTP credentials are configured, send real email over SMTP
+    if smtp_user and smtp_pass:
+        try:
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = subject
+            msg['From'] = f"Annapoorni Academy Notifications <{smtp_user}>"
+            msg['To'] = admin_recipient
+
+            html_part = MIMEText(body_html, 'html')
+            msg.attach(html_part)
+
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, admin_recipient, msg.as_string())
+            server.quit()
+            print(f"[OK] Real Email sent successfully over SMTP to {admin_recipient}!")
+            return True, "Email sent successfully over SMTP."
+        except Exception as e:
+            print(f"[WARNING] SMTP Delivery Notice: {str(e)}")
+            return False, f"SMTP Error: {str(e)}"
+    else:
+        print("[INFO] Note: SMTP credentials (MAIL_USERNAME/MAIL_PASSWORD) not set in .env. Notification logged & saved to Admin Portal.")
+        return True, "Notification recorded in Admin Portal & logged."

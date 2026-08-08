@@ -1,0 +1,44 @@
+from flask import Blueprint, jsonify
+from models.course import Course
+from models.subject import Subject
+from models.lesson import Lesson
+from models.quiz import Quiz, QuizAttempt
+from models.announcement import Announcement
+from models.media import Media
+from utils.auth import admin_required
+
+admin_dashboard_bp = Blueprint('admin_dashboard', __name__, url_prefix='/api/admin/dashboard')
+
+@admin_dashboard_bp.route('', methods=['GET'])
+@admin_required()
+def get_dashboard_summary():
+    total_courses = Course.query.count()
+    published_courses = Course.query.filter_by(status='published').count()
+    total_subjects = Subject.query.count()
+    total_lessons = Lesson.query.count()
+    published_lessons = Lesson.query.filter_by(is_published=True).count()
+    total_quizzes = Quiz.query.count()
+    total_quiz_attempts = QuizAttempt.query.count()
+    total_announcements = Announcement.query.count()
+    total_media = Media.query.count()
+
+    recent_courses = [c.to_dict() for c in Course.query.order_by(Course.created_at.desc()).limit(5).all()]
+    recent_announcements = [a.to_dict() for a in Announcement.query.order_by(Announcement.created_at.desc()).limit(5).all()]
+    recent_attempts = [at.to_dict() for at in QuizAttempt.query.order_by(QuizAttempt.completed_at.desc()).limit(5).all()]
+
+    return jsonify({
+        'metrics': {
+            'total_courses': total_courses,
+            'published_courses': published_courses,
+            'total_subjects': total_subjects,
+            'total_lessons': total_lessons,
+            'published_lessons': published_lessons,
+            'total_quizzes': total_quizzes,
+            'total_quiz_attempts': total_quiz_attempts,
+            'total_announcements': total_announcements,
+            'total_media': total_media
+        },
+        'recent_courses': recent_courses,
+        'recent_announcements': recent_announcements,
+        'recent_attempts': recent_attempts
+    }), 200

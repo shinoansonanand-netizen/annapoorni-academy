@@ -1,0 +1,35 @@
+import os
+from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from parent or current directory .env file
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+load_dotenv()
+
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'annapoorni-secret-key-default-2026')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'annapoorni-jwt-secret-key-default-2026')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=int(os.environ.get('JWT_ACCESS_TOKEN_EXPIRES_DAYS', 7)))
+
+    # Fallback to local SQLite database if DATABASE_URL is not set or empty
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        f"sqlite:///{os.path.join(os.path.dirname(__file__), 'annapoorni.db')}"
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Upload configurations
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+    MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 10 * 1024 * 1024)) # 10MB
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'}
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+class ProductionConfig(Config):
+    DEBUG = False
+
+config_by_name = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
+}
