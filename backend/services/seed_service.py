@@ -195,7 +195,7 @@ def seed_database():
     # 6. Social Links
     if not SocialLink.query.first():
         socials = [
-            SocialLink(platform='Instagram', url='https://instagram.com/annapoorniacademy', icon='Instagram', display_order=1, is_enabled=True),
+            SocialLink(platform='Instagram', url='https://www.instagram.com/coachsindhuram?igsh=MXR4cmdvaHZveHZleA==', icon='Instagram', display_order=1, is_enabled=True),
             SocialLink(platform='YouTube', url='https://youtube.com/@annapoorniacademy', icon='Youtube', display_order=2, is_enabled=True),
             SocialLink(platform='LinkedIn', url='https://www.linkedin.com/in/coach-sindhuram/', icon='Linkedin', display_order=3, is_enabled=True),
             SocialLink(platform='Facebook', url='https://facebook.com/annapoorniacademy', icon='Facebook', display_order=4, is_enabled=True),
