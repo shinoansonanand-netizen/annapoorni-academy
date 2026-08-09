@@ -44,7 +44,7 @@ VALUES
 -- Social Links
 INSERT INTO social_links (platform, url, icon, display_order, is_enabled, show_in_header, show_in_footer, show_in_contact, show_in_homepage)
 VALUES 
-('Instagram', 'https://www.instagram.com/coachsindhuram?igsh=MXR4cmdvaHZveHZleA==', 'Instagram', 1, TRUE, TRUE, TRUE, TRUE, TRUE),
+('Instagram', 'https://www.instagram.com/coachsindhuram?igsh=MXR4cmdvaHZveHZleA%3D%3D', 'Instagram', 1, TRUE, TRUE, TRUE, TRUE, TRUE),
 ('YouTube', 'https://youtube.com/@annapoorniacademy', 'Youtube', 2, TRUE, TRUE, TRUE, TRUE, TRUE),
 ('LinkedIn', 'https://www.linkedin.com/in/coach-sindhuram/', 'Linkedin', 3, TRUE, TRUE, TRUE, TRUE, TRUE),
 ('Facebook', 'https://facebook.com/annapoorniacademy', 'Facebook', 4, TRUE, TRUE, TRUE, TRUE, TRUE),
