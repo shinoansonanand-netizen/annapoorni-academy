@@ -44,7 +44,7 @@ export const Contact = () => {
       </section>
 
       <section className="container" style={{ padding: '4rem 1.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3.5rem' }}>
+        <div className="responsive-grid-1-1">
           {/* Contact Details Column */}
           <div>
             <h2 style={{ fontSize: '1.75rem', marginBottom: '1.5rem' }}>Get in Touch</h2>

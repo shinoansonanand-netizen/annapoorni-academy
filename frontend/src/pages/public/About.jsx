@@ -17,7 +17,7 @@ export const About = () => {
       </section>
 
       <section className="container" style={{ padding: '5rem 1.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+        <div className="responsive-grid-1-1">
           <div>
             <span style={{ color: 'var(--secondary-color)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               MEET COACH SINDHU RAM

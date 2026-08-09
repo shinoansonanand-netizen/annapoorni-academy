@@ -88,7 +88,6 @@ export const Navbar = () => {
           {/* Mobile Menu Toggle */}
           <button
             className="mobile-menu-btn"
-            style={{ display: 'none' }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >

@@ -60,12 +60,12 @@ export const Courses = () => {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', flex: 1 }}>
           <select
             className="form-control"
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
-            style={{ width: '180px' }}
+            style={{ flex: 1, minWidth: '140px' }}
           >
             <option value="">All Subjects</option>
             {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -75,7 +75,7 @@ export const Courses = () => {
             className="form-control"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{ width: '180px' }}
+            style={{ flex: 1, minWidth: '140px' }}
           >
             <option value="">All Categories</option>
             <option value="Computer Science">Computer Science</option>

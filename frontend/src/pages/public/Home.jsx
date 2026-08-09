@@ -156,7 +156,7 @@ export const Home = () => {
           position: 'relative',
           overflow: 'hidden'
         }}>
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }}>
+          <div className="container responsive-grid-1-1">
             <div className="animate-fade-in">
               <h1 style={{ fontSize: '3rem', lineHeight: 1.15, fontWeight: 800, marginBottom: '1.25rem', color: '#FFFFFF' }}>
                 {hero.title || 'Learn Better. Grow Smarter.'}
@@ -194,7 +194,7 @@ export const Home = () => {
       {/* About Section */}
       {about && (
         <section style={{ padding: '5rem 0' }}>
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+          <div className="container responsive-grid-1-1">
             {about.image_url && (
               <img
                 src={about.image_url}
